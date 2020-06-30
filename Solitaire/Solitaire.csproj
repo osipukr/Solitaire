@@ -1,0 +1,239 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resoures\Backgrounds\Background.jpg" />
+    <None Remove="Resoures\Cards\Back.bmp" />
+    <None Remove="Resoures\Cards\C10.bmp" />
+    <None Remove="Resoures\Cards\C2.bmp" />
+    <None Remove="Resoures\Cards\C3.bmp" />
+    <None Remove="Resoures\Cards\C4.bmp" />
+    <None Remove="Resoures\Cards\C5.bmp" />
+    <None Remove="Resoures\Cards\C6.bmp" />
+    <None Remove="Resoures\Cards\C7.bmp" />
+    <None Remove="Resoures\Cards\C8.bmp" />
+    <None Remove="Resoures\Cards\C9.bmp" />
+    <None Remove="Resoures\Cards\CA.bmp" />
+    <None Remove="Resoures\Cards\CJ.bmp" />
+    <None Remove="Resoures\Cards\CK.bmp" />
+    <None Remove="Resoures\Cards\CQ.bmp" />
+    <None Remove="Resoures\Cards\D10.bmp" />
+    <None Remove="Resoures\Cards\D2.bmp" />
+    <None Remove="Resoures\Cards\D3.bmp" />
+    <None Remove="Resoures\Cards\D4.bmp" />
+    <None Remove="Resoures\Cards\D5.bmp" />
+    <None Remove="Resoures\Cards\D6.bmp" />
+    <None Remove="Resoures\Cards\D7.bmp" />
+    <None Remove="Resoures\Cards\D8.bmp" />
+    <None Remove="Resoures\Cards\D9.bmp" />
+    <None Remove="Resoures\Cards\DA.bmp" />
+    <None Remove="Resoures\Cards\DJ.bmp" />
+    <None Remove="Resoures\Cards\DK.bmp" />
+    <None Remove="Resoures\Cards\DQ.bmp" />
+    <None Remove="Resoures\Cards\H10.bmp" />
+    <None Remove="Resoures\Cards\H2.bmp" />
+    <None Remove="Resoures\Cards\H3.bmp" />
+    <None Remove="Resoures\Cards\H4.bmp" />
+    <None Remove="Resoures\Cards\H5.bmp" />
+    <None Remove="Resoures\Cards\H6.bmp" />
+    <None Remove="Resoures\Cards\H7.bmp" />
+    <None Remove="Resoures\Cards\H8.bmp" />
+    <None Remove="Resoures\Cards\H9.bmp" />
+    <None Remove="Resoures\Cards\HA.bmp" />
+    <None Remove="Resoures\Cards\HJ.bmp" />
+    <None Remove="Resoures\Cards\HK.bmp" />
+    <None Remove="Resoures\Cards\HQ.bmp" />
+    <None Remove="Resoures\Cards\S10.bmp" />
+    <None Remove="Resoures\Cards\S2.bmp" />
+    <None Remove="Resoures\Cards\S3.bmp" />
+    <None Remove="Resoures\Cards\S4.bmp" />
+    <None Remove="Resoures\Cards\S5.bmp" />
+    <None Remove="Resoures\Cards\S6.bmp" />
+    <None Remove="Resoures\Cards\S7.bmp" />
+    <None Remove="Resoures\Cards\S8.bmp" />
+    <None Remove="Resoures\Cards\S9.bmp" />
+    <None Remove="Resoures\Cards\SA.bmp" />
+    <None Remove="Resoures\Cards\SJ.bmp" />
+    <None Remove="Resoures\Cards\SK.bmp" />
+    <None Remove="Resoures\Cards\SQ.bmp" />
+    <None Remove="Resoures\Icons\Solitaire.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Solitaire.Logic\Solitaire.Logic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resoures\Backgrounds\Background.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\Back.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\C10.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\C2.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\C3.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\C4.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\C5.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\C6.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\C7.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\C8.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\C9.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\CA.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\CJ.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\CK.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\CQ.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\D10.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\D2.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\D3.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\D4.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\D5.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\D6.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\D7.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\D8.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\D9.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\DA.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\DJ.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\DK.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\DQ.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\H10.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\H2.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\H3.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\H4.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\H5.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\H6.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\H7.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\H8.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\H9.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\HA.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\HJ.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\HK.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\HQ.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\S10.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\S2.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\S3.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\S4.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\S5.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\S6.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\S7.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\S8.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\S9.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\SA.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\SJ.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\SK.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Cards\SQ.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resoures\Icons\Solitaire.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>
