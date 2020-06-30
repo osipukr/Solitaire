@@ -1,9 +1,9 @@
-﻿namespace Solitaire.Logic.Enums
+﻿namespace Solitaire.Models
 {
     /// <summary>
-    /// The card types.
+    /// The Card Types.
     /// </summary>
-    public enum CardTypes
+    public enum CardType
     {
         //  Hearts
         HA,

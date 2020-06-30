@@ -1,9 +1,9 @@
-﻿namespace Solitaire.Logic.Enums
+﻿namespace Solitaire.Models
 {
     /// <summary>
-    /// Represents a card colors.
+    /// Represents a card colour.
     /// </summary>
-    public enum CardColors
+    public enum CardColour
     {
         /// <summary>
         /// Black cards (spades or clubs).

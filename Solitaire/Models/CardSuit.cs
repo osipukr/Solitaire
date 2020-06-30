@@ -1,9 +1,9 @@
-﻿namespace Solitaire.Logic.Enums
+﻿namespace Solitaire.Models
 {
     /// <summary>
     /// Represents a card's suit.
     /// </summary>
-    public enum CardSuits
+    public enum CardSuit
     {
         /// <summary>
         /// Hearts. 
