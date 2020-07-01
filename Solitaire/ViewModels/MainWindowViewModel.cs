@@ -6,9 +6,8 @@ using System.Windows.Input;
 using Apex.Extensions;
 using Apex.MVVM;
 using Solitaire.Models;
-using Solitaire.ViewModels;
 
-namespace Solitaire
+namespace Solitaire.ViewModels
 {
     public class MainWindowViewModel : CardGameViewModel
     {

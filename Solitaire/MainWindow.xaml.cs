@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Apex.Adorners;
 using Apex.DragAndDrop;
 using Solitaire.ViewModels;
+using Solitaire.Windows;
 
 namespace Solitaire
 {
@@ -13,11 +17,18 @@ namespace Solitaire
     /// </summary>
     public partial class MainWindow
     {
+        /// <summary>
+        /// Temporary storage for cards being dragged.
+        /// </summary>
+        private List<PlayingCard> _draggingCards;
+
+        private readonly MainWindowViewModel _viewModel;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            ViewModel = new MainWindowViewModel();
+            _viewModel = (MainWindowViewModel)DataContext;
 
             //  Wire up the drag and drop host.
             DragAndDropHost.DragAndDropStart += Instance_DragAndDropStart;
@@ -25,103 +36,130 @@ namespace Solitaire
             DragAndDropHost.DragAndDropEnd += Instance_DragAndDropEnd;
         }
 
-        void Instance_DragAndDropEnd(object sender, DragAndDropEventArgs args)
+        private void Instance_DragAndDropEnd(object sender, DragAndDropEventArgs args)
         {
+            var itemsControl = (ItemsControl)args.DragSource;
+            var playingCards = (ObservableCollection<PlayingCard>)itemsControl.ItemsSource;
+
             //  We've put cards temporarily in the drag stack, put them in the 
             //  source stack again.                
-            foreach (var dragCard in draggingCards)
-                ((ObservableCollection<PlayingCard>)((ItemsControl)args.DragSource).ItemsSource).Add(dragCard);
+            foreach (var dragCard in _draggingCards)
+            {
+                playingCards.Add(dragCard);
+            }
 
             //  If we have a drop target, move the card.
             if (args.DropTarget != null)
             {
+                var dropTarget = (ItemsControl)args.DropTarget;
+                var dragPayingCards = (ObservableCollection<PlayingCard>)dropTarget.ItemsSource;
+                var dragPlayingCard = (PlayingCard)args.DragData;
+
                 //  Move the card.
-                ViewModel.MoveCard(
-                    (ObservableCollection<PlayingCard>)((ItemsControl)args.DragSource).ItemsSource,
-                    (ObservableCollection<PlayingCard>)((ItemsControl)args.DropTarget).ItemsSource,
-                    (PlayingCard)args.DragData, false);
+                _viewModel.MoveCard(playingCards, dragPayingCards, dragPlayingCard, false);
             }
         }
 
-        void Instance_DragAndDropContinue(object sender, DragAndDropEventArgs args)
+        private void Instance_DragAndDropContinue(object sender, DragAndDropEventArgs args)
         {
             args.Allow = true;
         }
 
-        void Instance_DragAndDropStart(object sender, DragAndDropEventArgs args)
+        private void Instance_DragAndDropStart(object sender, DragAndDropEventArgs args)
         {
             //  The data should be a playing card.
-            var card = args.DragData as PlayingCard;
-            if (card == null || card.IsPlayable == false)
+
+            if (!(args.DragData is PlayingCard card) || card.IsPlayable == false)
             {
                 args.Allow = false;
+
                 return;
             }
+
             args.Allow = true;
 
-            //  If the card is draggable, we're going to want to drag the whole
-            //  stack.
-            var cards = ViewModel.GetCardCollection(card);
-            draggingCards = new List<PlayingCard>();
+            //  If the card is draggable, we're going to want to drag the whole stack.
+            var cards = _viewModel.GetCardCollection(card);
+
+            _draggingCards = new List<PlayingCard>();
+
             var start = cards.IndexOf(card);
+
             for (var i = start; i < cards.Count; i++)
-                draggingCards.Add(cards[i]);
+            {
+                _draggingCards.Add(cards[i]);
+            }
 
             //  Clear the drag stack.
-            DragStack.ItemsSource = draggingCards;
+            DragStack.ItemsSource = _draggingCards;
+
             DragStack.UpdateLayout();
-            args.DragAdorner = new Apex.Adorners.VisualAdorner(DragStack);
+
+            args.DragAdorner = new VisualAdorner(DragStack);
+
+            var sourceStack = (ItemsControl)args.DragSource;
+            var playingCards = (ObservableCollection<PlayingCard>)sourceStack.ItemsSource;
 
             //  Hide each dragging card.
-            var sourceStack = args.DragSource as ItemsControl;
-
-            foreach (var dragCard in draggingCards)
+            foreach (var dragCard in _draggingCards)
             {
-                ((ObservableCollection<PlayingCard>)sourceStack.ItemsSource).Remove(dragCard);
+                playingCards.Remove(dragCard);
             }
-        }
-
-
-        /// <summary>
-        /// The ViewModel dependency property.
-        /// </summary>
-        private static readonly DependencyProperty ViewModelProperty =
-          DependencyProperty.Register(nameof(ViewModel), typeof(MainWindowViewModel), typeof(MainWindow),
-          new PropertyMetadata(new MainWindowViewModel()));
-
-        /// <summary>
-        /// Gets or sets the view model.
-        /// </summary>
-        /// <value>The view model.</value>
-        public MainWindowViewModel ViewModel
-        {
-            get => (MainWindowViewModel)GetValue(ViewModelProperty);
-            set => SetValue(ViewModelProperty, value);
         }
 
         /// <summary>
         /// Handles the MouseRightButtonDown event of the dragAndDropHost control.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Input.MouseButtonEventArgs"/> instance containing the event data.</param>
-        private void dragAndDropHost_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void DragAndDropHost_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ViewModel.TryMoveAllCardsToAppropriateFoundations();
+            _viewModel.TryMoveAllCardsToAppropriateFoundations();
         }
-
-        /// <summary>
-        /// Temporary storage for cards being dragged.
-        /// </summary>
-        private List<PlayingCard> draggingCards;
 
         /// <summary>
         /// Handles the MouseLeftButtonUp event of the CardStackControl control.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Input.MouseButtonEventArgs"/> instance containing the event data.</param>
         private void CardStackControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            ViewModel.TurnStockCommand.Execute(null);
+            _viewModel.TurnStockCommand.Execute(null);
+        }
+
+        private void CloseEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void AboutGameEventHandler(object sender, RoutedEventArgs e)
+        {
+            var window = new AboutGame
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+
+            try
+            {
+                window.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "О игре", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void AboutDeveloperEventHandler(object sender, RoutedEventArgs e)
+        {
+            var window = new AboutDeveloper
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+
+            try
+            {
+                window.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "О разработчике", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

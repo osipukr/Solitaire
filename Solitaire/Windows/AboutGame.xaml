@@ -1,0 +1,72 @@
+﻿<Window
+    x:Class="Solitaire.Windows.AboutGame"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="О игре"
+    Height="460"
+    Width="600">
+
+    <StackPanel>
+        <TextBlock HorizontalAlignment="Center" FontWeight="Bold">ПРАВИЛА</TextBlock>
+
+        <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
+            П1. Карты закрытой колоды (ЗК) берутся по  одной и выкладываются
+            в  открытую  колоду  причем  картинкой  вверх  эта  карта  становится
+            игровой.
+        </TextBlock>
+
+        <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
+            П2. Игровыми  картами  (сериями) являются  также  верхние  карты
+            (серии) 7 выложенных столбцов
+        </TextBlock>
+
+        <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
+            П3. Игровые  карты,   и  верхние  доступные  карты  серии  можно
+            перемещать на карты основы.
+        </TextBlock>
+
+        <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
+            П4. Первыми картами на  основу  идут тузы, а за  ними  в масть в
+            восходящем порядке остальные карты ( Т-2-3-4-5-6-7-8-9-10-В-Д-К).
+        </TextBlock>
+
+        <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
+            П5. Карты с одного столбца на  другой  можно  перемещать  только
+            сериями (серия может  состоять и из  одной карты), причем  всю  серию
+            сразу. Игровой в столбцах становится вся серия сразу.
+        </TextBlock>
+
+        <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
+            П6. Перемещение  игровых  карт с открытой колоды или со  столбца
+            (игровой серии) на столбец осуществляется в нисходящем порядке ( К &lt;-  Д &lt;- В &lt;- ... &lt;- 3 &lt;- 2 ), чередуя масти черные и красные.
+        </TextBlock>
+
+        <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
+            П7. При  перемещении  серии,  требуется   следить   за  исходной
+            (нижней) картой серии, например,  на  карту П10 можно перенести серию
+            Б9-Т8-Б7-П6-Ч5.
+        </TextBlock>
+
+        <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
+            П8. На освободившийся  столбец  может быть перенесен либо только
+            король, либо серия, в которой исходной картой является король.
+        </TextBlock>
+
+        <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
+            П9. Закрытая  карта  столбца  тут  же  открывается,  как  только
+            игровая карта или  серия  с него перенесены на  другой  столбец или в
+            основу.
+        </TextBlock>
+
+        <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
+            П10. По исчерпании закрытой  колоды  (ЗК), все карты из открытой
+            колоды обратно перекладываются  на  закрытую и можно опять продолжать
+            раскладку. Раскладка  завершается если никаких перекладок уже сделать
+            невозможно.
+        </TextBlock>
+    </StackPanel>
+
+</Window>

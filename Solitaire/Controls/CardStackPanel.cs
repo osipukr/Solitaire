@@ -16,13 +16,10 @@ namespace Solitaire.Controls
         /// <summary>
         /// Infinite size, useful later.
         /// </summary>
-        private readonly Size infiniteSpace = new Size(double.MaxValue, double.MaxValue);
+        private readonly Size _infiniteSpace = new Size(double.MaxValue, double.MaxValue);
 
         protected override Size MeasureOverride(Size constraint)
         {
-            //  Keep track of the overall size required.
-            var resultSize = new Size(0, 0);
-
             //  Get the offsets that each element will need.
             var offsets = CalculateOffsets();
 
@@ -30,12 +27,11 @@ namespace Solitaire.Controls
             var totalX = offsets.Select(o => o.Width).Sum();
             var totalY = offsets.Select(o => o.Height).Sum();
 
-            //  Measure each child (always needed, even if we don't use
-            //  the measurement!)
+            //  Measure each child (always needed, even if we don't use the measurement!)
             foreach (UIElement child in Children)
             {
                 //  Measure the child against infinite space.
-                child.Measure(infiniteSpace);
+                child.Measure(_infiniteSpace);
             }
 
             //  Add the size of the last element.
@@ -112,7 +108,6 @@ namespace Solitaire.Controls
         /// <summary>
         /// Calculates the offsets.
         /// </summary>
-        /// <returns></returns>
         private List<Size> CalculateOffsets()
         {
             //  Calculate the offsets on a card by card basis.
@@ -128,7 +123,9 @@ namespace Solitaire.Controls
                 var card = ((FrameworkElement) child).DataContext as PlayingCard;
 
                 if (card == null)
+                {
                     continue;
+                }
 
                 //  The amount we'll offset by.
                 double faceDownOffset = 0;
@@ -147,7 +144,7 @@ namespace Solitaire.Controls
                     case OffsetMode.EveryNthCard:
                         {
                             //  Offset only if n Mod N is zero.
-                            if (((n + 1) % NValue) == 0)
+                            if ((n + 1) % NValue == 0)
                             {
                                 faceDownOffset = FaceDownOffset;
                                 faceUpOffset = FaceUpOffset;
@@ -158,7 +155,7 @@ namespace Solitaire.Controls
                     case OffsetMode.TopNCards:
                         {
                             //  Offset only if (Total - N) <= n < Total
-                            if ((total - NValue) <= n && n < total)
+                            if (total - NValue <= n && n < total)
                             {
                                 faceDownOffset = FaceDownOffset;
                                 faceUpOffset = FaceUpOffset;
@@ -216,7 +213,6 @@ namespace Solitaire.Controls
         /// <summary>
         /// Gets the last child.
         /// </summary>
-        /// <value>The last child.</value>
         private UIElement LastChild => Children.Count > 0 ? Children[Children.Count - 1] : null;
 
         /// <summary>
@@ -230,7 +226,6 @@ namespace Solitaire.Controls
         /// <summary>
         /// Gets or sets the face down offset.
         /// </summary>
-        /// <value>The face down offset.</value>
         public double FaceDownOffset
         {
             get => (double)GetValue(FaceDownOffsetProperty);
@@ -248,7 +243,6 @@ namespace Solitaire.Controls
         /// <summary>
         /// Gets or sets the face up offset.
         /// </summary>
-        /// <value>The face up offset.</value>
         public double FaceUpOffset
         {
             get => (double)GetValue(FaceUpOffsetProperty);
@@ -265,7 +259,6 @@ namespace Solitaire.Controls
         /// <summary>
         /// Gets or sets the offset mode.
         /// </summary>
-        /// <value>The offset mode.</value>
         public OffsetMode OffsetMode
         {
             get => (OffsetMode)GetValue(OffsetModeProperty);
@@ -282,7 +275,6 @@ namespace Solitaire.Controls
         /// <summary>
         /// Gets or sets the N value.
         /// </summary>
-        /// <value>The N value.</value>
         public int NValue
         {
             get => (int)GetValue(NValueProperty);

@@ -5,9 +5,11 @@
     xmlns:apexControls="clr-namespace:Apex.Controls;assembly=Apex"
     xmlns:apexDragAndDrop="clr-namespace:Apex.DragAndDrop;assembly=Apex"
     xmlns:controls="clr-namespace:Solitaire.Controls"
-    x:Name="KlondikeSolitaireView"
+    xmlns:viewModels="clr-namespace:Solitaire.ViewModels"
+    x:Name="SolitaireView"
+    Title="Солитер"
     Height="600"
-    Width="800"
+    Width="1000"
     Icon="/Resources/Icons/Solitaire.ico">
 
     <Window.Resources>
@@ -18,16 +20,40 @@
         <ImageBrush ImageSource="/Resources/Backgrounds/Background.jpg" />
     </Window.Background>
 
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="Close" Executed="CloseEventHandler" />
+    </Window.CommandBindings>
+
     <!-- The main grid - the game is at the top and the commands are at the bottom. -->
-    <apexControls:ApexGrid Rows="*,Auto"
-                           DataContext="{Binding ViewModel, ElementName=KlondikeSolitaireView}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0" VerticalAlignment="Top">
+            <MenuItem Header="_Игра">
+                <MenuItem Header="_Новая игра" Command="{Binding NewGameCommand}" />
+                <Separator />
+                <MenuItem Header="_Выход" Command="Close" />
+            </MenuItem>
+
+            <MenuItem Header="_Справка">
+                <MenuItem Header="_О игре" Click="AboutGameEventHandler" />
+                <MenuItem Header="_О разрботчике" Click="AboutDeveloperEventHandler" />
+            </MenuItem>
+        </Menu>
 
         <!-- The cards etc are all in a Viewbox so that they resize in a sensible way when we resize the window. -->
-        <Viewbox Grid.Row="0" Margin="10">
+        <Viewbox Grid.Row="1" Margin="10">
 
             <!-- A DragAndDropHost allows us to perform more complicated logic when we drag and drop. -->
             <apexDragAndDrop:DragAndDropHost x:Name="DragAndDropHost"
-                                             MouseRightButtonDown="dragAndDropHost_MouseRightButtonDown"
+                                             MouseRightButtonDown="DragAndDropHost_MouseRightButtonDown"
                                              MinimumHorizontalDragDistance="0.0"
                                              MinimumVerticalDragDistance="0.0">
 
@@ -199,20 +225,9 @@
             </apexDragAndDrop:DragAndDropHost>
         </Viewbox>
 
-        <!-- A padded grid is used to layout commands and info at the bottom of the screen. -->
-        <apexControls:PaddedGrid Grid.Row="1"
-                                 Padding="4"
-                                 Columns="Auto">
-            <Button Style="{StaticResource SolitaireButtonStyle}"
-                    Grid.Column="0"
-                    Width="120"
-                    Content="Новая игра"
-                    Command="{Binding NewGameCommand}" />
-
-        </apexControls:PaddedGrid>
-
         <!-- The win overlay. -->
         <apexControls:ApexGrid Rows="*,Auto,Auto,Auto,*"
+                               Grid.Row="1"
                                Grid.RowSpan="2"
                                Background="#00FFFFFF"
                                Visibility="{Binding IsGameWon, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -234,6 +249,6 @@
                         Command="{Binding NewGameCommand}" />
             </StackPanel>
         </apexControls:ApexGrid>
-    </apexControls:ApexGrid>
+    </Grid>
 
 </Window>
