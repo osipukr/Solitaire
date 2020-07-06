@@ -11,25 +11,60 @@ namespace Solitaire.ViewModels
 {
     public class MainWindowViewModel : CardGameViewModel
     {
+        //  For ease of access we have arrays of the foundations and tableaus.
+        private readonly List<ObservableCollection<PlayingCard>> _foundations = new List<ObservableCollection<PlayingCard>>();
+        private readonly List<ObservableCollection<PlayingCard>> _tableaus = new List<ObservableCollection<PlayingCard>>();
+
         public MainWindowViewModel()
         {
             //  Create the quick access arrays.
-            foundations.Add(foundation1);
-            foundations.Add(foundation2);
-            foundations.Add(foundation3);
-            foundations.Add(foundation4);
+            _foundations.Add(Foundation1);
+            _foundations.Add(Foundation2);
+            _foundations.Add(Foundation3);
+            _foundations.Add(Foundation4);
 
-            tableaus.Add(tableau1);
-            tableaus.Add(tableau2);
-            tableaus.Add(tableau3);
-            tableaus.Add(tableau4);
-            tableaus.Add(tableau5);
-            tableaus.Add(tableau6);
-            tableaus.Add(tableau7);
+            _tableaus.Add(Tableau1);
+            _tableaus.Add(Tableau2);
+            _tableaus.Add(Tableau3);
+            _tableaus.Add(Tableau4);
+            _tableaus.Add(Tableau5);
+            _tableaus.Add(Tableau6);
+            _tableaus.Add(Tableau7);
 
             //  Create the turn stock command.
             TurnStockCommand = new Command(DoTurnStock);
         }
+
+        public ObservableCollection<PlayingCard> Foundation1 { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Foundation2 { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Foundation3 { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Foundation4 { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Tableau1 { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Tableau2 { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Tableau3 { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Tableau4 { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Tableau5 { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Tableau6 { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Tableau7 { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Stock { get; } = new ObservableCollection<PlayingCard>();
+
+        public ObservableCollection<PlayingCard> Waste { get; } = new ObservableCollection<PlayingCard>();
+
+        /// <summary>
+        /// Gets the turn stock command.
+        /// </summary>
+        public ICommand TurnStockCommand { get; }
 
         /// <summary>
         /// Gets the card collection for the specified card.
@@ -38,22 +73,22 @@ namespace Solitaire.ViewModels
         /// <returns></returns>
         public IList<PlayingCard> GetCardCollection(PlayingCard card)
         {
-            if (stock.Contains(card))
+            if (Stock.Contains(card))
             {
-                return stock;
+                return Stock;
             }
 
-            if (waste.Contains(card))
+            if (Waste.Contains(card))
             {
-                return waste;
+                return Waste;
             }
 
-            foreach (var foundation in foundations.Where(foundation => foundation.Contains(card)))
+            foreach (var foundation in _foundations.Where(foundation => foundation.Contains(card)))
             {
                 return foundation;
             }
 
-            return tableaus.FirstOrDefault(tableau => tableau.Contains(card));
+            return _tableaus.FirstOrDefault(tableau => tableau.Contains(card));
         }
 
         /// <summary>
@@ -67,22 +102,28 @@ namespace Solitaire.ViewModels
             base.NewGameCommandExecute(parameter);
 
             //  Clear everything.
-            stock.Clear();
-            waste.Clear();
-            foreach (var tableau in tableaus)
+            Stock.Clear();
+            Waste.Clear();
+
+            foreach (var tableau in _tableaus)
+            {
                 tableau.Clear();
-            foreach (var foundation in foundations)
+            }
+
+            foreach (var foundation in _foundations)
+            {
                 foundation.Clear();
+            }
 
             //  Create a list of card types.
-            var eachCardType = new List<CardType>();
-            foreach (CardType cardType in Enum.GetValues(typeof(CardType)))
-                eachCardType.Add(cardType);
+            var eachCardType = Enum.GetValues(typeof(CardType)).Cast<CardType>().ToList();
 
             //  Create a playing card from each card type.
-            var playingCards = new List<PlayingCard>();
-            foreach (var cardType in eachCardType)
-                playingCards.Add(new PlayingCard() { CardType = cardType, IsFaceDown = true });
+            var playingCards = eachCardType.Select(cardType => new PlayingCard
+            {
+                CardType = cardType,
+                IsFaceDown = true
+            }).ToList();
 
             //  Shuffle the playing cards.
             playingCards.Shuffle();
@@ -94,17 +135,23 @@ namespace Solitaire.ViewModels
                 for (var j = 0; j < i; j++)
                 {
                     var faceDownCard = playingCards.First();
+
                     playingCards.Remove(faceDownCard);
+
                     faceDownCard.IsFaceDown = true;
-                    tableaus[i].Add(faceDownCard);
+
+                    _tableaus[i].Add(faceDownCard);
                 }
 
                 //  Add the face up card.
                 var faceUpCard = playingCards.First();
+
                 playingCards.Remove(faceUpCard);
+
                 faceUpCard.IsFaceDown = false;
                 faceUpCard.IsPlayable = true;
-                tableaus[i].Add(faceUpCard);
+
+                _tableaus[i].Add(faceUpCard);
             }
 
             //  Finally we add every card that's left over to the stock.
@@ -112,8 +159,10 @@ namespace Solitaire.ViewModels
             {
                 playingCard.IsFaceDown = true;
                 playingCard.IsPlayable = false;
-                stock.Add(playingCard);
+
+                Stock.Add(playingCard);
             }
+
             playingCards.Clear();
         }
 
@@ -123,37 +172,46 @@ namespace Solitaire.ViewModels
         private void DoTurnStock()
         {
             //  If the stock is empty, put every card from the waste back into the stock.
-            if (stock.Count == 0)
+            if (Stock.Count == 0)
             {
-                foreach (var card in waste)
+                foreach (var card in Waste)
                 {
                     card.IsFaceDown = true;
                     card.IsPlayable = false;
-                    stock.Insert(0, card);
+
+                    Stock.Insert(0, card);
                 }
-                waste.Clear();
+
+                Waste.Clear();
             }
             else
             {
                 //  Everything in the waste so far must now have no offset.
-                foreach (var wasteCard in waste)
-                    wasteCard.FaceUpOffset = 0;
-
-                if (stock.Count > 0)
+                foreach (var wasteCard in Waste)
                 {
-                    var card = stock.Last();
-                    stock.Remove(card);
+                    wasteCard.FaceUpOffset = 0;
+                }
+
+                if (Stock.Count > 0)
+                {
+                    var card = Stock.Last();
+
+                    Stock.Remove(card);
+
                     card.IsFaceDown = false;
                     card.IsPlayable = false;
                     card.FaceUpOffset = 30;
-                    waste.Add(card);
+
+                    Waste.Add(card);
                 }
             }
 
             //  Everything in the waste must be not playable,
             //  apart from the top card.
-            foreach (var wasteCard in waste)
-                wasteCard.IsPlayable = wasteCard == waste.Last();
+            foreach (var wasteCard in Waste)
+            {
+                wasteCard.IsPlayable = wasteCard == Waste.Last();
+            }
         }
 
         /// <summary>
@@ -167,14 +225,18 @@ namespace Solitaire.ViewModels
             while (keepTrying)
             {
                 var movedACard = false;
-                if (waste.Count > 0)
-                    if (TryMoveCardToAppropriateFoundation(waste.Last()))
-                        movedACard = true;
-                foreach (var tableau in tableaus)
+                if (Waste.Count > 0)
                 {
-                    if (tableau.Count > 0)
-                        if (TryMoveCardToAppropriateFoundation(tableau.Last()))
-                            movedACard = true;
+                    if (TryMoveCardToAppropriateFoundation(Waste.Last()))
+                    {
+                        movedACard = true;
+                    }
+                }
+
+                foreach (var tableau in _tableaus.Where(tableau => tableau.Count > 0)
+                    .Where(tableau => TryMoveCardToAppropriateFoundation(tableau.Last())))
+                {
+                    movedACard = true;
                 }
 
                 //  We'll keep trying if we moved a card.
@@ -190,29 +252,32 @@ namespace Solitaire.ViewModels
         public bool TryMoveCardToAppropriateFoundation(PlayingCard card)
         {
             //  Try the top of the waste first.
-            if (waste.LastOrDefault() == card)
-                foreach (var foundation in foundations)
-                    if (MoveCard(waste, foundation, card, false))
-                        return true;
+            if (Waste.LastOrDefault() == card)
+            {
+                if (_foundations.Any(foundation => MoveCard(Waste, foundation, card, false)))
+                {
+                    return true;
+                }
+            }
 
             //  Is the card in a tableau?
             var inTableau = false;
             var i = 0;
-            for (; i < tableaus.Count && inTableau == false; i++)
-                inTableau = tableaus[i].Contains(card);
+
+            for (; i < _tableaus.Count && inTableau == false; i++)
+            {
+                inTableau = _tableaus[i].Contains(card);
+            }
 
             //  It's if its not in a tablea and it's not the top
             //  of the waste, we cannot move it.
             if (inTableau == false)
+            {
                 return false;
+            }
 
             //  Try and move to each foundation.
-            foreach (var foundation in foundations)
-                if (MoveCard(tableaus[i - 1], foundation, card, false))
-                    return true;
-
-            //  We couldn't move the card.
-            return false;
+            return _foundations.Any(foundation => MoveCard(_tableaus[i - 1], foundation, card, false));
         }
 
         /// <summary>
@@ -223,126 +288,125 @@ namespace Solitaire.ViewModels
         /// <param name="card">The card we're moving.</param>
         /// <param name="checkOnly">if set to <c>true</c> we only check if we CAN move, but don't actually move.</param>
         /// <returns>True if a card was moved.</returns>
-        public bool MoveCard(ObservableCollection<PlayingCard> from,
+        public bool MoveCard(
+            ObservableCollection<PlayingCard> from,
             ObservableCollection<PlayingCard> to,
             PlayingCard card, bool checkOnly)
         {
             //  The trivial case is where from and to are the same.
             if (from == to)
+            {
                 return false;
-
-            //  This is the complicated operation.
+            }
 
             //  Are we moving from the waste?
             if (from == Waste)
             {
                 //  Are we moving to a foundation?
-                if (foundations.Contains(to))
+                if (_foundations.Contains(to))
                 {
                     //  We can move to a foundation only if:
                     //  1. It is empty and we are an ace.
                     //  2. It is card SN and we are suit S and Number N+1
-                    if (to.Count == 0 && card.Value == 0 ||
-                        to.Count > 0 && to.Last().Suit == card.Suit && (to.Last()).Value == (card.Value - 1))
+                    if ((to.Count != 0 || card.Value != 0) &&
+                        (to.Count <= 0 || to.Last().Suit != card.Suit || to.Last().Value != card.Value - 1))
                     {
-                        //  Move from waste to foundation.
-                    }
-                    else
                         return false;
+                    }
                 }
                 //  Are we moving to a tableau?
-                else if (tableaus.Contains(to))
+                else if (_tableaus.Contains(to))
                 {
                     //  We can move to a tableau only if:
                     //  1. It is empty and we are a king.
                     //  2. It is card CN and we are color !C and Number N-1
-                    if ((to.Count == 0 && card.Value == 12) ||
-                        (to.Count > 0 && to.Last().Colour != card.Colour && (to.Last()).Value == (card.Value + 1)))
+                    if ((to.Count != 0 || card.Value != 12) &&
+                        (to.Count <= 0 || to.Last().Colour == card.Colour || to.Last().Value != card.Value + 1))
                     {
-                        //  Move from waste to tableau.
-                    }
-                    else
                         return false;
+                    }
                 }
                 //  Any other move from the waste is wrong.
                 else
+                {
                     return false;
+                }
             }
             //  Are we moving from a tableau?
-            else if (tableaus.Contains(from))
+            else if (_tableaus.Contains(from))
             {
                 //  Are we moving to a foundation?
-                if (foundations.Contains(to))
+                if (_foundations.Contains(to))
                 {
                     //  We can move to a foundation only if:
                     //  1. It is empty and we are an ace.
                     //  2. It is card SN and we are suit S and Number N+1
-                    if ((to.Count == 0 && card.Value == 0) ||
-                        (to.Count > 0 && to.Last().Suit == card.Suit && (to.Last()).Value == (card.Value - 1)))
+                    if ((to.Count != 0 || card.Value != 0) &&
+                        (to.Count <= 0 || to.Last().Suit != card.Suit || to.Last().Value != card.Value - 1))
                     {
-                        //  Move from tableau to foundation.
-                    }
-                    else
                         return false;
+                    }
                 }
                 //  Are we moving to another tableau?
-                else if (tableaus.Contains(to))
+                else if (_tableaus.Contains(to))
                 {
                     //  We can move to a tableau only if:
                     //  1. It is empty and we are a king.
                     //  2. It is card CN and we are color !C and Number N-1
-                    if ((to.Count == 0 && card.Value == 12) ||
-                        (to.Count > 0 && to.Last().Colour != card.Colour && (to.Last()).Value == (card.Value + 1)))
+                    if ((to.Count != 0 || card.Value != 12) &&
+                        (to.Count <= 0 || to.Last().Colour == card.Colour || to.Last().Value != card.Value + 1))
                     {
-                        //  Move from tableau to tableau.
-                    }
-                    else
                         return false;
+                    }
                 }
                 //  Any other move from a tableau is wrong.
                 else
+                {
                     return false;
+                }
             }
             //  Are we moving from a foundation?
-            else if (foundations.Contains(from))
+            else if (_foundations.Contains(from))
             {
                 //  Are we moving to a tableau?
-                if (tableaus.Contains(to))
+                if (_tableaus.Contains(to))
                 {
                     //  We can move to a tableau only if:
                     //  1. It is empty and we are a king.
                     //  2. It is card CN and we are color !C and Number N-1
-                    if ((to.Count == 0 && card.Value == 12) ||
-                        (to.Count > 0 && to.Last().Colour != card.Colour && (to.Last()).Value == (card.Value + 1)))
+                    if ((to.Count != 0 || card.Value != 12) &&
+                        (to.Count <= 0 || to.Last().Colour == card.Colour || to.Last().Value != card.Value + 1))
                     {
-                        //  Move from foundation to tableau.
-                    }
-                    else
                         return false;
+                    }
                 }
                 //  Are we moving to another foundation?
-                else if (foundations.Contains(to))
+                else if (_foundations.Contains(to))
                 {
                     //  We can move from a foundation to a foundation only 
                     //  if the source foundation has one card (the ace) and the
                     //  destination foundation has no cards).
-                    if (from.Count == 1 && to.Count == 0)
+                    if (from.Count != 1 || to.Count != 0)
                     {
-                        //  The move is valid, but has no impact on the score.
-                    }
-                    else
                         return false;
+                    }
                 }
                 //  Any other move from a foundation is wrong.
                 else
+                {
                     return false;
+                }
             }
             else
+            {
                 return false;
+            }
 
             //  If we were just checking, we're done.
             if (checkOnly)
+            {
                 return true;
+            }
 
             //  If we've got here we've passed all tests
             //  and move the card and update the score.
@@ -351,7 +415,9 @@ namespace Solitaire.ViewModels
             //  If we have moved from the waste, we must 
             //  make sure that the top of the waste is playable.
             if (from == Waste && Waste.Count > 0)
+            {
                 Waste.Last().IsPlayable = true;
+            }
 
             //  Check for victory.
             CheckForVictory();
@@ -365,21 +431,30 @@ namespace Solitaire.ViewModels
         /// <param name="from">The stack to move from.</param>
         /// <param name="to">The stack to move to.</param>
         /// <param name="card">The card.</param>
-        private void DoMoveCard(ObservableCollection<PlayingCard> from,
+        private void DoMoveCard(
+            ObservableCollection<PlayingCard> from,
             ObservableCollection<PlayingCard> to,
             PlayingCard card)
         {
             //  Indentify the run of cards we're moving.
             var run = new List<PlayingCard>();
+
             for (var i = from.IndexOf(card); i < from.Count; i++)
+            {
                 run.Add(from[i]);
+            }
 
             //  This function will move the card, as well as setting the 
             //  playable properties of the cards revealed.
             foreach (var runCard in run)
+            {
                 from.Remove(runCard);
+            }
+
             foreach (var runCard in run)
+            {
                 to.Add(runCard);
+            }
 
             //  Are there any cards left in the from pile?
             if (from.Count > 0)
@@ -398,9 +473,10 @@ namespace Solitaire.ViewModels
         public void CheckForVictory()
         {
             //  We've won if every foundation is full.
-            foreach (var foundation in foundations)
-                if (foundation.Count < 13)
-                    return;
+            if (_foundations.Any(foundation => foundation.Count < 13))
+            {
+                return;
+            }
 
             //  We've won.
             IsGameWon = true;
@@ -415,58 +491,13 @@ namespace Solitaire.ViewModels
             base.RightClickCardCommandExecute(parameter);
 
             //  Cast the card.
-            var card = parameter as PlayingCard;
-            if (card == null)
+            if (!(parameter is PlayingCard card))
+            {
                 return;
+            }
 
             //  Try and move it to the appropriate foundation.
             TryMoveCardToAppropriateFoundation(card);
         }
-
-        //  For ease of access we have arrays of the foundations and tableaus.
-        List<ObservableCollection<PlayingCard>> foundations = new List<ObservableCollection<PlayingCard>>();
-        List<ObservableCollection<PlayingCard>> tableaus = new List<ObservableCollection<PlayingCard>>();
-
-        //  Klondike Solitaire has four foundations.
-        private ObservableCollection<PlayingCard> foundation1 = new ObservableCollection<PlayingCard>();
-        private ObservableCollection<PlayingCard> foundation2 = new ObservableCollection<PlayingCard>();
-        private ObservableCollection<PlayingCard> foundation3 = new ObservableCollection<PlayingCard>();
-        private ObservableCollection<PlayingCard> foundation4 = new ObservableCollection<PlayingCard>();
-
-        //  It also has seven tableaus.
-        private ObservableCollection<PlayingCard> tableau1 = new ObservableCollection<PlayingCard>();
-        private ObservableCollection<PlayingCard> tableau2 = new ObservableCollection<PlayingCard>();
-        private ObservableCollection<PlayingCard> tableau3 = new ObservableCollection<PlayingCard>();
-        private ObservableCollection<PlayingCard> tableau4 = new ObservableCollection<PlayingCard>();
-        private ObservableCollection<PlayingCard> tableau5 = new ObservableCollection<PlayingCard>();
-        private ObservableCollection<PlayingCard> tableau6 = new ObservableCollection<PlayingCard>();
-        private ObservableCollection<PlayingCard> tableau7 = new ObservableCollection<PlayingCard>();
-
-        //  As in most games there is one stock pile.
-        private ObservableCollection<PlayingCard> stock = new ObservableCollection<PlayingCard>();
-
-        //  Also, there is the waste pile...
-        private ObservableCollection<PlayingCard> waste = new ObservableCollection<PlayingCard>();
-
-        //  Accessors for the various card stacks.
-        public ObservableCollection<PlayingCard> Foundation1 { get { return foundation1; } }
-        public ObservableCollection<PlayingCard> Foundation2 { get { return foundation2; } }
-        public ObservableCollection<PlayingCard> Foundation3 { get { return foundation3; } }
-        public ObservableCollection<PlayingCard> Foundation4 { get { return foundation4; } }
-        public ObservableCollection<PlayingCard> Tableau1 { get { return tableau1; } }
-        public ObservableCollection<PlayingCard> Tableau2 { get { return tableau2; } }
-        public ObservableCollection<PlayingCard> Tableau3 { get { return tableau3; } }
-        public ObservableCollection<PlayingCard> Tableau4 { get { return tableau4; } }
-        public ObservableCollection<PlayingCard> Tableau5 { get { return tableau5; } }
-        public ObservableCollection<PlayingCard> Tableau6 { get { return tableau6; } }
-        public ObservableCollection<PlayingCard> Tableau7 { get { return tableau7; } }
-        public ObservableCollection<PlayingCard> Stock { get { return stock; } }
-        public ObservableCollection<PlayingCard> Waste { get { return waste; } }
-
-        /// <summary>
-        /// Gets the turn stock command.
-        /// </summary>
-        /// <value>The turn stock command.</value>
-        public ICommand TurnStockCommand { get; }
     }
 }

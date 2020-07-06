@@ -23,7 +23,6 @@ namespace Solitaire.Converters
         /// </summary>
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            //  Cast the data.
             if (values == null || values.Length != 2)
             {
                 return null;
@@ -42,7 +41,7 @@ namespace Solitaire.Converters
             //  Turn this string into a proper path.
             imageSource = $"pack://application:,,,/Solitaire;component/Resources/Cards/{imageSource}.bmp";
 
-            //  Do we need to add this brush to the static dictionary?
+            //  Add this brush to the static dictionary
             if (Brushes.ContainsKey(imageSource) == false)
             {
                 Brushes.Add(imageSource, new ImageBrush(new BitmapImage(new Uri(imageSource))));

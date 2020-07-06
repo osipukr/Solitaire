@@ -86,7 +86,7 @@ namespace Solitaire.Controls
             {
                 //  Get the card. If we don't have one, skip.
 
-                if (!(((FrameworkElement)child).DataContext is PlayingCard card))
+                if (!(((FrameworkElement)child).DataContext is PlayingCard))
                 {
                     continue;
                 }
@@ -120,9 +120,8 @@ namespace Solitaire.Controls
             foreach (UIElement child in Children)
             {
                 //  Get the card. If we don't have one, skip.
-                var card = ((FrameworkElement) child).DataContext as PlayingCard;
 
-                if (card == null)
+                if (!(((FrameworkElement)child).DataContext is PlayingCard card))
                 {
                     continue;
                 }
